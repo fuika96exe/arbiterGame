@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge Page</title>
+    <style>
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 375px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .image-container img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .steps {
+            font-size: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .button-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .button-row button {
+            flex: 1;
+            padding: 15px;
+            background-color: #f0f0f0;
+            color: black;
+            font-size: 18px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .button-row button:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="image-container">
+            <img id="question-image" src="" alt="Image">
+        </div>
+        <div class="steps" id="steps"></div>
+        <div class="button-row">
+            <button onclick="handleAnswer('red')">红变</button>
+            <button onclick="handleAnswer('draw')">和棋</button>
+            <button onclick="handleAnswer('black')">黑变</button>
+        </div>
+    </div>
+
+    <audio id="correctSound" src="correct.mp3" preload="auto"></audio>
+
+    <script>
+        const questions = [
+			{
+				"question": "images/1.png",
+				"answer": "images/1_ans.png",
+				"steps": "1. 车三进一，炮9进1<br>2. 车三退一，炮9退1",
+				"correctAnswer": "red"
+			},
+			{
+				"question": "images/2.png",
+				"answer": "images/2_ans.png",
+				"steps": "1. 炮九平八，车1平2<br>2. 炮八平九，车2平1",
+				"correctAnswer": "draw"
+			},
+			{
+				"question": "images/3.png",
+				"answer": "images/3_ans.png",
+				"steps": "1. 车二退五，车2退5<br>2. 车二进五，车2进5",
+				"correctAnswer": "black"
+			},
+			{
+				"question": "images/4.png",
+				"answer": "images/4_ans.png",
+				"steps": "1. 马六退七，炮2进1<br>2. 马七进六，炮2退1",
+				"correctAnswer": "red"
+			},
+			{
+				"question": "images/5.png",
+				"answer": "images/5_ans.png",
+				"steps": "1. 车二平一，炮9平8<br>2. 车一平二，炮8平9",
+				"correctAnswer": "red"
+			},
+			{
+				"question": "images/6.png",
+				"answer": "images/6_ans.png",
+				"steps": "1. 炮九退三，车2进3<br>2. 炮九进三，车2退3",
+				"correctAnswer": "draw"
+			},
+			{
+				"question": "images/7.png",
+				"answer": "images/7_ans.png",
+				"steps": "1. 炮一平二，车9平8<br>2. 炮二平一，车8平9",
+				"correctAnswer": "draw"
+			},
+			{
+				"question": "images/8.png",
+				"answer": "images/8_ans.png",
+				"steps": "1. 车五平六，卒5平4<br>2. 车六平五，卒4平5",
+				"correctAnswer": "red"
+			},
+			{
+				"question": "images/9.png",
+				"answer": "images/9_ans.png",
+				"steps": "1. 炮二平三，炮8平7<br>2. 炮三平二，炮7平8",
+				"correctAnswer": "red"
+			},
+			{
+				"question": "images/10.png",
+				"answer": "images/10_ans.png",
+				"steps": "1. 帅五平四，车4平6<br>2. 帅四平五，车6平4",
+				"correctAnswer": "black"
+			},
+			{
+				"question": "images/11.png",
+				"answer": "images/11_ans.png",
+				"steps": "1. 车八进二，车4退3<br>2. 车八退二，车4进3",
+				"correctAnswer": "red"
+			},
+			{
+				"question": "images/12.png",
+				"answer": "images/12_ans.png",
+				"steps": "1. 炮八平九，车1平2<br>2. 炮九平八，车2平1",
+				"correctAnswer": "draw"
+			},
+			{
+				"question": "images/13.png",
+				"answer": "images/13_ans.png",
+				"steps": "1. 车八进一，后炮进1<br>2. 车八退一，后炮退1",
+				"correctAnswer": "black"
+			},
+			{
+				"question": "images/14.png",
+				"answer": "images/14_ans.png",
+				"steps": "1. 马四进二，卒7平8<br>2. 马二退四，卒8平7",
+				"correctAnswer": "draw"
+			},
+			{
+				"question": "images/15.png",
+				"answer": "images/15_ans.png",
+				"steps": "1. 兵二平三，炮7平8<br>2. 兵三平二，炮8平7",
+				"correctAnswer": "red"
+			},
+			{
+				"question": "images/16.png",
+				"answer": "images/16_ans.png",
+				"steps": "1. 车九平八，卒1平2<br>2. 车八平九，卒2平1",
+				"correctAnswer": "draw"
+			},
+			{
+				"question": "images/17.png",
+				"answer": "images/17_ans.png",
+				"steps": "1. 兵七平八，车2平1<br>2. 兵八平七，车1平2",
+				"correctAnswer": "red"
+			},
+			{
+				"question": "images/18.png",
+				"answer": "images/18_ans.png",
+				"steps": "1. 炮九退一，将6退1<br>2. 炮九进一，将6进1",
+				"correctAnswer": "draw"
+			},
+			{
+				"question": "images/19.png",
+				"answer": "images/19_ans.png",
+				"steps": "1. 车一平二，车8平9<br>2. 车二平一，车9平8",
+				"correctAnswer": "draw"
+			},
+			{
+				"question": "images/20.png",
+				"answer": "images/20_ans.png",
+				"steps": "1. 兵五平六，车5平4<br>2. 兵六平五，车4平5",
+				"correctAnswer": "black"
+			},
+			{
+			    "question": "images/21.png",
+			    "answer": "images/21_ans.png",
+ 			   "steps": "1. 炮一进一，炮5进1<br>2. 炮一退一，炮5退1",
+			    "correctAnswer": "draw"
+			  },
+			  {
+ 			   "question": "images/22.png",
+  			  "answer": "images/22_ans.png",
+ 			   "steps": "1. 马三进四，炮8进1<br>2. 马四退三，炮8退1",
+ 			   "correctAnswer": "black"
+ 			 },
+  {
+    "question": "images/23.png",
+    "answer": "images/23_ans.png",
+    "steps": "1. 车三平二，卒8平7<br>2. 车二平三，卒7平8",
+    "correctAnswer": "red"
+  },
+  {
+    "question": "images/24.png",
+    "answer": "images/24_ans.png",
+    "steps": "1. 炮二进二，车7退2<br>2. 炮二退二，车7进2",
+    "correctAnswer": "black"
+  },
+  {
+    "question": "images/25.png",
+    "answer": "images/25_ans.png",
+    "steps": "1. 兵一平二，马8进9<br>2. 兵二平一，马9退8",
+    "correctAnswer": "red"
+  },
+  {
+    "question": "images/26.png",
+    "answer": "images/26_ans.png",
+    "steps": "1. 马就退七，炮8进1<br>2. 马七进九，炮8退1",
+    "correctAnswer": "black"
+  },
+  {
+    "question": "images/27.png",
+    "answer": "images/27_ans.png",
+    "steps": "1. 车四平七，炮4平5<br>2. 车七平四，炮5平4",
+    "correctAnswer": "black"
+  },
+  {
+    "question": "images/28.png",
+    "answer": "images/28_ans.png",
+    "steps": "1. 车七平六，卒4平3<br>2. 车六平七，卒3平4",
+    "correctAnswer": "red"
+  },
+  {
+    "question": "images/29.png",
+    "answer": "images/29_ans.png",
+    "steps": "1. 炮三平四，车6平7<br>2. 炮四平三，前车平6",
+    "correctAnswer": "red"
+  },
+  {
+    "question": "images/30.png",
+    "answer": "images/30_ans.png",
+    "steps": "1. 马四退二，车7平8<br>2. 马二进四，车8平7",
+    "correctAnswer": "draw"
+  },
+  {
+    "question": "images/31.png",
+    "answer": "images/31_ans.png",
+    "steps": "1. 炮五平三，车5平7<br>2. 炮三平五，车7平5",
+    "correctAnswer": "black"
+  },
+  {
+    "question": "images/32.png",
+    "answer": "images/32_ans.png",
+    "steps": "1. 炮四平三，车7平6<br>2. 炮三平四，车6平7",
+    "correctAnswer": "draw"
+  },
+  {
+    "question": "images/33.png",
+    "answer": "images/33_ans.png",
+    "steps": "1. 车八退三，将4退1<br>2. 车八进三，将4进1",
+    "correctAnswer": "red"
+  },
+  {
+    "question": "images/34.png",
+    "answer": "images/34_ans.png",
+    "steps": "1. 马八进六，车2平3<br>2. 马六退八，车3平2",
+    "correctAnswer": "red"
+  },
+  {
+    "question": "images/35.png",
+    "answer": "images/35_ans.png",
+    "steps": "1. 车八平七，卒2平3<br>2. 车七平八，卒3平2",
+    "correctAnswer": "black"
+  },
+  {
+    "question": "images/36.png",
+    "answer": "images/36_ans.png",
+    "steps": "1. 士五进四，卒5平6<br>2. 士四退五，卒6平5",
+    "correctAnswer": "black"
+  },
+  {
+    "question": "images/37.png",
+    "answer": "images/37_ans.png",
+    "steps": "1. 兵六平五，前车平2<br>2. 兵五平六，车2平4",
+    "correctAnswer": "draw"
+  },
+  {
+    "question": "images/38.png",
+    "answer": "images/38_ans.png",
+    "steps": "1. 帅六退一，车2进5<br>2. 帅六进一，车2退5",
+    "correctAnswer": "draw"
+  },
+  {
+    "question": "images/39.png",
+    "answer": "images/39_ans.png",
+    "steps": "1. 炮四平二，马8退6<br>2. 炮二平四，马6进8",
+    "correctAnswer": "red"
+  },
+  {
+    "question": "images/40.png",
+    "answer": "images/40_ans.png",
+    "steps": "17. 相五进三，车6进3<br>18. 相三退五，车6退3",
+    "correctAnswer": "red"
+  },
+  {
+    "question": "images/41.png",
+    "answer": "images/41_ans.png",
+    "steps": "47. 炮六进四，马8退7<br>48. 炮六进一，马7进8",
+    "correctAnswer": "red"
+  },
+  {
+    "question": "images/42.png",
+    "answer": "images/42_ans.png",
+    "steps": "7. 炮六进一，马3进2<br>8. 炮六退一，马2退3",
+    "correctAnswer": "red"
+  },
+  {
+    "question": "images/43.png",
+    "answer": "images/43_ans.png",
+    "steps": "20. 炮二平三，炮8平8<br>21. 炮三平二，炮9平8",
+    "correctAnswer": "red"
+  },
+  {
+    "question": "images/44.png",
+    "answer": "images/44_ans.png",
+    "steps": "11. 兵七平六，车2平4<br>12. 兵六平七，车4平2",
+    "correctAnswer": "red"
+  },
+  {
+    "question": "images/45.png",
+    "answer": "images/45_ans.png",
+    "steps": "24. 马五退六，炮3进2<br>25. 马六进五，炮3退2",
+    "correctAnswer": "draw"
+  },
+  {
+    "question": "images/46.png",
+    "answer": "images/46_ans.png",
+    "steps": "51. 车九平五，炮5平1<br>52. 车五平九，炮1平5",
+    "correctAnswer": "red"
+  },
+  {
+    "question": "images/47.png",
+    "answer": "images/47_ans.png",
+    "steps": "22. 车四退一，马8退7<br>23. 车四进一，马7进8",
+    "correctAnswer": "draw"
+  },
+  {
+    "question": "images/48.png",
+    "answer": "images/48_ans.png",
+    "steps": "1. 车五平二，车6平5<br>2. 车二平五，车5平6",
+    "correctAnswer": "draw"
+  },
+  {
+    "question": "images/49.png",
+    "answer": "images/49_ans.png",
+    "steps": "31. 炮五平六，将4平5<br>32. 炮六平五，将5平4",
+    "correctAnswer": "red"
+  },
+  {
+    "question": "images/50.png",
+    "answer": "images/50_ans.png",
+    "steps": "44. 车七平六，马1退3<br>45. 车六平七，马3进1",
+    "correctAnswer": "draw"
+  }
+
+
+        ];
+
+        function loadQuestion() {
+            const randomIndex = Math.floor(Math.random() * questions.length);
+            const selectedQuestion = questions[randomIndex];
+            document.getElementById('question-image').src = selectedQuestion.question;
+            document.getElementById('steps').innerHTML = selectedQuestion.steps;
+            sessionStorage.setItem('currentQuestion', JSON.stringify(selectedQuestion));
+        }
+
+        function handleAnswer(answer) {
+            const currentQuestion = JSON.parse(sessionStorage.getItem('currentQuestion'));
+            if (answer === currentQuestion.correctAnswer) {
+                document.getElementById('correctSound').play();
+                let score = parseInt(sessionStorage.getItem('score')) + 20;
+                let attempts = parseInt(sessionStorage.getItem('attempts')) + 1;
+                sessionStorage.setItem('score', score.toString());
+                sessionStorage.setItem('attempts', attempts.toString());
+                sessionStorage.setItem('isCorrect', 'true'); // Set the correct answer flag
+                setTimeout(() => {
+                    if (attempts < 5) {
+                        window.location.href = 'next.html';
+                    } else {
+                        window.location.href = 'result.html';
+                    }
+                }, 1000);
+            } else {
+                sessionStorage.setItem('isCorrect', 'false'); // Set the incorrect answer flag
+                alert('回答错误!');
+            }
+        }
+
+        window.onload = loadQuestion;
+    </script>
+</body>
+</html>

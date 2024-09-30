@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>象棋裁判之家（测试）</title>
+    <style>
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 375px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .top-frame {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* 居中内容 */
+            margin-bottom: 20px;
+        }
+        .logo {
+            width: 50px;
+            height: 50px;
+            background-image: url('icon.png'); /* 使用相对路径 */
+            background-size: cover;
+            background-position: center;
+            border-radius: 50%;
+            margin-right: 10px; /* 添加右边距，以便与应用名称分开 */
+        }
+        .app-name {
+            font-size: 24px;
+            text-align: left;
+        }
+        .challenge-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #f0f0f0;
+            color: black;
+            font-size: 18px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 40px;
+        }
+        .challenge-button:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-frame">
+            <div class="logo"></div>
+            <div class="app-name">裁判之家</div>
+        </div>
+        <button class="challenge-button" onclick="startChallenge()">挑战</button>
+    </div>
+
+    <script>
+        function startChallenge() {
+            sessionStorage.setItem('score', '0');
+            sessionStorage.setItem('attempts', '0');
+            window.location.href = 'challenge.html';
+        }
+    </script>
+</body>
+</html>

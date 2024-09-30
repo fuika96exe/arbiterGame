@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next Challenge</title>
+    <style>
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 375px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .title {
+            font-size: 24px;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .image-container img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .next-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #f0f0f0;
+            color: black;
+            font-size: 18px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .next-button:hover {
+            background-color: #e0e0e0;
+        }
+        .message {
+            font-size: 24px;
+            color: green;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">题目解析</div>
+        <div class="image-container">
+            <img id="answer-image" src="" alt="Image">
+        </div>
+        <div id="correct-message" class="message hidden">回答正确！</div>
+        <button class="next-button" onclick="goToNextChallenge()">下一题</button>
+    </div>
+
+    <script>
+        function goToNextChallenge() {
+            window.location.href = 'challenge.html';
+        }
+
+        window.onload = function() {
+            const currentQuestion = JSON.parse(sessionStorage.getItem('currentQuestion'));
+            document.getElementById('answer-image').src = currentQuestion.answer;
+            const isCorrect = sessionStorage.getItem('isCorrect') === 'true';
+            if (isCorrect) {
+                document.getElementById('correct-message').classList.remove('hidden');
+            }
+            // Clear the 'isCorrect' flag for the next challenge
+            sessionStorage.removeItem('isCorrect');
+        };
+    </script>
+</body>
+</html>

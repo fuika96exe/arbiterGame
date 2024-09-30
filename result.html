@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result Page</title>
+    <style>
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 375px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .image-container img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .home-button, .play-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #f0f0f0;
+            color: black;
+            font-size: 18px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .home-button:hover, .play-button:hover {
+            background-color: #e0e0e0;
+        }
+        .title {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">得分结算</div>
+        <div class="image-container">
+            <img id="result-image" src="congrats.png" alt="Image">
+        </div>
+        <!-- <button class="play-button" id="playButton">播放庆祝音乐</button> -->
+        <button class="home-button" onclick="goToHome()">返回主页</button>
+    </div>
+
+   <!-- <audio id="celebrationSound" src="celebration.mp3" preload="auto"></audio>-->
+
+    <script>
+        function goToHome() {
+            window.location.href = 'index.html';
+        }
+
+        window.onload = function() {
+            const score = parseInt(sessionStorage.getItem('score'));
+            const playButton = document.getElementById('playButton');
+            if (score >= 100) {
+                document.getElementById('result-image').src = 'congrats.png';
+                playButton.style.display = 'block';
+                playButton.onclick = function() {
+                    document.getElementById('celebrationSound').play();
+                    playButton.style.display = 'none';
+                };
+            } else {
+                document.getElementById('result-image').src = 'try_again.png';
+                playButton.style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>
